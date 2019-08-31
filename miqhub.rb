@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'fetch_repos'
+require_relative 'icon'
+
+module Plugin::MiqHub
+  PM = Plugin::MiqHub
+end
 
 Plugin.create :miqhub do
   PM = Plugin::MiqHub
@@ -10,11 +15,11 @@ Plugin.create :miqhub do
     name: _('GitHubでプラグインを探す'),
     condition: ->(_) { true },
     visible: true,
-    icon: Skin[:github],
+    icon: (PM.icon :github),
     role: :window,
   ) do
     tab :miqhub, _('MiqHub') do
-      set_icon Skin[:github]
+      set_icon PM.icon :github
       set_deletable true
       temporary_tab true
       tl = timeline :miqhub do

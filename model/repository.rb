@@ -33,7 +33,7 @@ module Plugin::MiqHub
 
     # for user model
     def icon
-      Skin[:github]
+      PM.icon :github
     end
 
     def to_s
