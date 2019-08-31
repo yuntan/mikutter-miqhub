@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'icon'
-require_relative 'fetch_repos'
+require_relative 'github_api'
 require_relative 'filesystem'
 
 Plugin.create :miqhub do
