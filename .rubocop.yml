@@ -1,0 +1,34 @@
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Metrics/BlockLength:
+  Enabled: false
+Metrics/LineLength:
+  IgnoredPatterns:
+  - ^[^'"]*/.+/
+  - '%r'
+Style/AndOr:
+  EnforcedStyle: conditionals
+Style/AsciiComments:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+  EnforcedStyle: omit_parentheses
+  AllowParenthesesInMultilineCall: true
+  AllowParenthesesInChaining: true
+  AllowParenthesesInCamelCaseMethod: true
+Style/MultilineBlockChain:
+  Enabled: false
+Style/NestedParenthesizedCalls:
+  Enabled: false
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
