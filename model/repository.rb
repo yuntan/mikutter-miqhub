@@ -1,21 +1,28 @@
 # frozen_string_literal: true
 
+require_relative 'owner'
+
 module Plugin::MiqHub
-  # GitHubのレポジトリを表すModel
+  # GitHubのRepositoryを表すModel
   class Repository < Diva::Model
     include Diva::Model::MessageMixin
     include Diva::Model::UserMixin
 
-    register :miqhub_repository, name: 'MiqHub Repository', timeline: true
+    register :miqhub_repository, name: 'GitHub Repository', timeline: true
 
     field.string :name, required: true
-    # should be implemented for message model
-    field.string :description, required: true
+    field.string :name_with_owner, required: true
+    field.has    :owner, Owner, required: true
     field.int    :star_count
-    field.time   :created, required: true
-    field.time   :modified, required: true
+    field.bool   :starred?
+    field.int    :fork_count
     field.uri    :url, required: true
     field.string :default_branch_name, required: true
+
+    # for message model
+    field.string :description, required: true
+    field.time   :created, required: true
+    field.time   :modified, required: true
 
     # for basis model
     # https://reference.mikutter.hachune.net/model/2017/05/06/basis-model.html
@@ -23,17 +30,25 @@ module Plugin::MiqHub
     alias uri url
     alias perma_link url
 
-    # for user model
-    alias idname name
+    # for message model
+    alias user owner
 
-    # should be implemented for message model
-    def user
-      self
-    end
+    # for user model and message model
+    alias idname name_with_owner
 
     # for user model
     def icon
-      PM.icon :github
+      owner.icon
+    end
+
+    # for message model
+    def favorite?(counterpart=nil)
+      # TODO: world, userを検証する
+      starred?
+    end
+
+    def archive_uri
+      URI.parse "#{url}/archive/#{default_branch_name}.tar.gz"
     end
 
     def to_s

@@ -5,6 +5,7 @@ require 'uri'
 require 'net/http'
 
 require_relative 'model/repository'
+require_relative 'model/owner'
 
 module Plugin::MiqHub
   ENDPOINT = URI.parse 'https://api.github.com/graphql'
@@ -19,11 +20,19 @@ module Plugin::MiqHub
       search(query: "topic:mikutter-plugin", type: REPOSITORY, first: 100) {
         nodes {
           ... on Repository {
+            name
             nameWithOwner
+            owner {
+              login
+              url
+              avatarUrl
+            }
             description
             stargazers {
               totalCount
             }
+            viewerHasStarred
+            forkCount
             createdAt
             updatedAt
             url
@@ -55,9 +64,19 @@ module_function
     data = (JSON.parse body)['data']
     data['search']['nodes'].map do |it|
       Repository.new(
-        name: it['nameWithOwner'],
+        name: it['name'],
+        name_with_owner: it['nameWithOwner'],
+        owner: it['owner'].yield_self do |it|
+          Owner.new(
+            name: it['login'],
+            url: it['url'],
+            avatar_uri: it['avatarUrl'],
+          )
+        end,
         description: it['description'],
         star_count: it['stargazers']['totalCount'],
+        starred: it['viewerHasStarred'],
+        fork_count: it['forkCount'],
         created: it['createdAt'],
         modified: it['updatedAt'],
         url: it['url'],
