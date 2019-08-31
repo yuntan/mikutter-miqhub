@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'fetch_repos'
-require_relative 'icon'
+require_relative 'command'
+require_relative 'model/repository'
 
 module Plugin::MiqHub
   PM = Plugin::MiqHub
@@ -9,36 +9,6 @@ end
 
 Plugin.create :miqhub do
   PM = Plugin::MiqHub
-
-  command(
-    :miqhub_list,
-    name: _('GitHubでプラグインを探す'),
-    condition: ->(_) { true },
-    visible: true,
-    icon: (PM.icon :github),
-    role: :window,
-  ) do
-    tab :miqhub, _('MiqHub') do
-      set_icon PM.icon :github
-      set_deletable true
-      temporary_tab true
-      tl = timeline :miqhub do
-        # order :modified
-      end
-      PM.fetch_repos.each do |repo|
-        tl << repo
-      end
-      active!
-    end
-  end
-
-  # defspell :favorite
-  #
-  # defspell :unfavorite
-  #
-  # defspall :install
-  #
-  # defspall :uninstall
 
   defmodelviewer PM::Repository do |repo|
     [
