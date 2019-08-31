@@ -1,0 +1,9 @@
+---
+slug: :miqhub
+depends:
+  mikutter: '3.9'
+  plugin: [command, gui, modelviewer, spell, world]
+version: '0.1'
+author: '@yuntan_t@mstdn.maud.io'
+name: MiqHub
+description: Plugin finder for mikutter
