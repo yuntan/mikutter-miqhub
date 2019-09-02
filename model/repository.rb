@@ -30,11 +30,13 @@ module Plugin::MiqHub
     alias uri url
     alias perma_link url
 
-    # for message model
-    alias user owner
-
     # for user model and message model
     alias idname name_with_owner
+
+    # for message model
+    def user
+      self
+    end
 
     # for user model
     def icon
