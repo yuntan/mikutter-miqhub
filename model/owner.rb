@@ -5,7 +5,7 @@ module Plugin::MiqHub
   class Owner < Diva::Model
     include Diva::Model::UserMixin
 
-    register :miqhub_repository_owner, name: 'GitHub RepositoryOwner', myself: true
+    register :miqhub_owner, name: 'GitHub Owner', myself: true
 
     field.string :name, required: true
     field.uri    :url, required: true
