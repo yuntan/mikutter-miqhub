@@ -3,6 +3,7 @@
 require_relative 'icon'
 require_relative 'github_api'
 require_relative 'filesystem'
+require_relative 'model/repository'
 
 Plugin.create :miqhub do
   PM = Plugin::MiqHub
@@ -34,29 +35,35 @@ Plugin.create :miqhub do
 
   command(
     :miqhub_install,
-    name: _('インストール'),
-    condition: ->(opt) \
-      { opt.messages.any? { |m| not PM::FileSystem.installed? m.idname } },
+    name: ->(opt) \
+      { format (_ '%{title}をインストール'), title: opt.messages.first.title },
+    condition: lambda do |opt|
+      m = opt.messages.first
+      (opt.messages.size == 1) \
+        && (m.is_a? PM::Repository) \
+        && (not PM::FileSystem.installed? m.idname)
+    end,
     visible: true,
     icon: (PM.icon :install),
     role: :timeline,
   ) do |opt|
-    opt.messages
-      .filter { |m| not PM::FileSystem.installed? m.idname }
-      .each { |m| PM::FileSystem.install! m }
+    PM::FileSystem.install! opt.messages.first
   end
 
   command(
     :miqhub_uninstall,
-    name: _('アンインストール'),
-    condition: ->(opt) \
-      { opt.messages.any? { |m| PM::FileSystem.installed? m.idname } },
+    name: ->(opt) \
+      { format (_ '%{title}をアンインストール'), title: opt.messages.first.title },
+    condition: lambda do |opt|
+      m = opt.messages.first
+      (opt.messages.size == 1) \
+        && (m.is_a? PM::Repository) \
+        && (PM::FileSystem.installed? m.idname)
+    end,
     visible: true,
     icon: (PM.icon :uninstall),
     role: :timeline,
   ) do |opt|
-    opt.messages
-      .filter { |m| PM::FileSystem.installed? m.idname }
-      .each { |m| PM::FileSystem.uninstall! m.idname }
+    PM::FileSystem.uninstall! opt.messages.first.idname
   end
 end
