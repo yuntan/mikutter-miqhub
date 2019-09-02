@@ -28,7 +28,8 @@ Plugin.create :miqhub do
 
   defmodelviewer PM::Owner do |owner|
     [
-      [(_ '名前'), owner.name],
+      [(_ '名前'), owner.idname],
+      [(_ 'リポジトリ数'), owner.repo_count],
       ['URL', owner.url],
     ]
   end
