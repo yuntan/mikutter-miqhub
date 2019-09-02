@@ -9,23 +9,26 @@ Plugin.create :miqhub do
 
   command(
     :miqhub_list,
-    name: _('GitHubでプラグインを探す'),
-    condition: ->(_) { tabs },
+    name: (_ 'GitHubでプラグインを探す'),
+    condition: ->(_) { true },
     visible: true,
     icon: (PM.icon :github),
     role: :window,
   ) do
-    tab :miqhub, _('MiqHub') do
+    (Plugin.filtering :tabs, {}).first.keys.include? :miqhub and next
+
+    tab :miqhub, 'GitHub tag:mikutter-plugin' do
       set_icon PM.icon :github
       set_deletable true
       temporary_tab true
       tl = timeline :miqhub do
-        # order :modified
-      end
-      PM.fetch_repos.each do |repo|
-        tl << repo
+        order { |repo| repo.modified.to_i }
       end
       active!
+
+      Deferred.next do
+        tl << +PM.fetch_repos
+      end
     end
   end
 
