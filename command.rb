@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'icon'
-require_relative 'github_api'
+require_relative 'api'
 require_relative 'filesystem'
+require_relative 'icon'
 require_relative 'model/repository'
 
 Plugin.create :miqhub do
@@ -11,7 +11,7 @@ Plugin.create :miqhub do
   command(
     :miqhub_list,
     name: (_ 'GitHubでプラグインを探す'),
-    condition: ->(_) { true },
+    condition: ->(_) { !(Plugin.filtering :miqhub_worlds, nil).first.empty? },
     visible: true,
     icon: (PM.icon :github),
     role: :window,
@@ -27,9 +27,9 @@ Plugin.create :miqhub do
       end
       active!
 
-      Deferred.next do
-        tl << +PM.fetch_repos
-      end
+      world, = Plugin.filtering :miqhub_current, nil
+      api = PM::API.new world.token
+      Deferred.next { tl << +api.fetch_repos }
     end
   end
 
