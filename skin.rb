@@ -11,7 +11,8 @@ module Plugin::MiqHub
 
     def photo(name)
       # TODO: かわいいアイコンを描く
-      name == :github and return (Plugin.filtering :photo, url, []).first
+      name == :github \
+        and return (Plugin.filtering :photo, GITHUB_FAVICON_URL, []).first
       # fallbackのディレクトリを指定
       ::Skin.photo name, [DIR]
     end
