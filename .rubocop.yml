@@ -26,6 +26,8 @@ Style/MultilineBlockChain:
   Enabled: false
 Style/NestedParenthesizedCalls:
   Enabled: false
+Style/Not:
+  Enabled: false
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 Style/TrailingCommaInArrayLiteral:
