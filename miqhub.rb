@@ -2,6 +2,7 @@
 
 require_relative 'command'
 require_relative 'modelviewer'
+require_relative 'world'
 
 module Plugin::MiqHub
   PM = Plugin::MiqHub
