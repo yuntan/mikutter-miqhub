@@ -14,7 +14,7 @@ module Plugin::MiqHub
     field.string :token, required: true
 
     def icon
-      PM.icon :github
+      Skin[:github]
     end
 
     def title

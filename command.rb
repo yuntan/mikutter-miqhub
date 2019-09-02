@@ -2,8 +2,8 @@
 
 require_relative 'api'
 require_relative 'filesystem'
-require_relative 'icon'
 require_relative 'model/repository'
+require_relative 'skin'
 
 Plugin.create :miqhub do
   PM = Plugin::MiqHub
@@ -13,13 +13,13 @@ Plugin.create :miqhub do
     name: (_ 'GitHubでプラグインを探す'),
     condition: ->(_) { !(Plugin.filtering :miqhub_worlds, nil).first.empty? },
     visible: true,
-    icon: (PM.icon :github),
+    icon: PM::Skin[:github],
     role: :window,
   ) do
     (Plugin.filtering :tabs, {}).first.keys.include? :miqhub and next
 
     tab :miqhub, 'GitHub tag:mikutter-plugin' do
-      set_icon PM.icon :github
+      set_icon PM::Skin[:github]
       set_deletable true
       temporary_tab true
       tl = timeline :miqhub do
@@ -58,7 +58,8 @@ Plugin.create :miqhub do
         && (not PM::FileSystem.installed? m.idname)
     end,
     visible: true,
-    icon: (PM.icon :install),
+    # TODO: かわいいアイコンを描く
+    icon: PM::Skin[:install],
     role: :timeline,
   ) do |opt|
     PM::FileSystem.install! opt.messages.first
@@ -75,7 +76,8 @@ Plugin.create :miqhub do
         && (PM::FileSystem.installed? m.idname)
     end,
     visible: true,
-    icon: (PM.icon :uninstall),
+    # TODO: かわいいアイコンを描く
+    icon: PM::Skin[:uninstall],
     role: :timeline,
   ) do |opt|
     PM::FileSystem.uninstall! opt.messages.first.idname
