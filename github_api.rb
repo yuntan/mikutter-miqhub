@@ -48,40 +48,41 @@ module Plugin::MiqHub
 module_function
 
   def fetch_repos
-    body = nil
-    (Net::HTTP.new ENDPOINT.host, ENDPOINT.port).tap do |http|
-      http.use_ssl = true
-    end.start do |http|
-      req = Net::HTTP::Post.new ENDPOINT.path, HEADER
-      req.body = { query: QUERY }.to_json
-      http.request req do |res|
-        res.code == '200' or return nil
-        p res.message
-        body = res.body
+    Thread.new do
+      body = nil
+      (Net::HTTP.new ENDPOINT.host, ENDPOINT.port).tap do |http|
+        http.use_ssl = true
+      end.start do |http|
+        req = Net::HTTP::Post.new ENDPOINT.path, HEADER
+        req.body = { query: QUERY }.to_json
+        http.request req do |res|
+          res.code == '200' or next Deferred.fail res.message
+          body = res.body
+        end
       end
-    end
 
-    data = (JSON.parse body)['data']
-    data['search']['nodes'].map do |it|
-      Repository.new(
-        name: it['name'],
-        name_with_owner: it['nameWithOwner'],
-        owner: it['owner'].yield_self do |it|
-          Owner.new(
-            name: it['login'],
-            url: it['url'],
-            avatar_uri: it['avatarUrl'],
-          )
-        end,
-        description: it['description'],
-        star_count: it['stargazers']['totalCount'],
-        starred: it['viewerHasStarred'],
-        fork_count: it['forkCount'],
-        created: it['createdAt'],
-        modified: it['updatedAt'],
-        url: it['url'],
-        default_branch_name: it['defaultBranchRef']['name'],
-      )
+      data = (JSON.parse body)['data']
+      data['search']['nodes'].map do |it|
+        Repository.new(
+          name: it['name'],
+          name_with_owner: it['nameWithOwner'],
+          owner: it['owner'].yield_self do |it|
+            Owner.new(
+              name: it['login'],
+              url: it['url'],
+              avatar_uri: it['avatarUrl'],
+            )
+          end,
+          description: it['description'] || '',
+          star_count: it['stargazers']['totalCount'],
+          starred?: it['viewerHasStarred'],
+          fork_count: it['forkCount'],
+          created: it['createdAt'],
+          modified: it['updatedAt'],
+          url: it['url'],
+          default_branch_name: it['defaultBranchRef']['name'],
+        )
+      end
     end
   end
 end
