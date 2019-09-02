@@ -34,6 +34,20 @@ Plugin.create :miqhub do
   end
 
   command(
+    :miqhub_about_owner,
+    name: ->(opt) \
+      { format (_ '%{title}について'), title: opt.messages.first.owner.title },
+    condition: lambda do |opt|
+      (opt.messages.size == 1) && (opt.messages.first.is_a? PM::Repository)
+    end,
+    visible: true,
+    icon: ->(opt) { opt.messages.first.owner.icon },
+    role: :timeline,
+  ) do |opt|
+    Plugin.call :open, opt.messages.first.owner
+  end
+
+  command(
     :miqhub_install,
     name: ->(opt) \
       { format (_ '%{title}をインストール'), title: opt.messages.first.title },
