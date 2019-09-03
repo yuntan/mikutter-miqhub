@@ -4,13 +4,14 @@ require 'singleton'
 require 'rubygems/package'
 require 'zlib'
 
-require_relative 'model/repository'
+require_relative 'model_ext'
 
 module Plugin::MiqHub
   class FileSystem
     include Singleton
 
     PLUGIN_DIR = Pathname.new "#{Environment::CONFROOT}/plugin"
+    YAML_NAME = '.miqhub.yml'
 
     class << self
       def installed?(idname)
@@ -30,9 +31,9 @@ module Plugin::MiqHub
       # :slug => RepositoryのHash
       @local_repos = {}
 
-      Dir.glob PLUGIN_DIR / '*' / '.miqhub' do |s|
+      Dir.glob PLUGIN_DIR / '*' / YAML_NAME do |s|
         slug = (s.split File::Separator)[-2].to_sym
-        h = JSON.parse (IO.read s), symbolize_names: true
+        h = load_yaml File.new s
         @local_repos[slug] = Repository.new h
       end
     end
@@ -49,13 +50,13 @@ module Plugin::MiqHub
         path = PLUGIN_DIR
         tar_xf repo.archive_uri.open, path
         path /= "#{repo.name}-#{repo.default_branch_name}"
-        yaml = (File.new path / '.mikutter.yml').read
-        slug = (YAML.safe_load yaml, [Symbol])['slug']
+        yaml = load_yaml File.new path / '.mikutter.yml'
+        slug = yaml[:slug]
         type_strict slug => Symbol
         newpath = PLUGIN_DIR / slug.to_s
         FileUtils.mv path, newpath
-        File.open newpath / '.miqhub', 'w' do |f|
-          f.write repo.to_json
+        File.open newpath / YAML_NAME, 'w' do |f|
+          f.write repo.to_yaml
         end
       end.next do
         @local_repos[slug] = repo
@@ -86,6 +87,10 @@ module Plugin::MiqHub
         entry.close
       end
       tar.close
+    end
+
+    def load_yaml(io)
+      YAML.safe_load io.read, [Symbol, Time], symbolize_names: true
     end
   end
 end
