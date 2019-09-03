@@ -4,18 +4,27 @@ Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
 Metrics/BlockLength:
   Enabled: false
 Metrics/LineLength:
   IgnoredPatterns:
+  - http
   - ^[^'"]*/.+/
   - '%r'
+Metrics/MethodLength:
+  Enabled: false
 Style/AndOr:
   EnforcedStyle: conditionals
 Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+Style/FormatStringToken:
+  EnforcedStyle: template
 Style/MethodCallWithArgsParentheses:
   Enabled: true
   EnforcedStyle: omit_parentheses
