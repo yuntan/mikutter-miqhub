@@ -1,0 +1,16 @@
+---
+name: mikutter-miqhub
+name_with_owner: yuntan/mikutter-miqhub
+owner:
+  idname: yuntan
+  url: https://github.com/yuntan
+  avatar_url: https://avatars3.githubusercontent.com/u/574575?v=4
+  repo_count: 61
+star_count: 0
+starred?: false
+fork_count: 0
+url: https://github.com/yuntan/mikutter-miqhub
+default_branch_name: master
+description: MiqHub - mikutterのためのプラグインインストーラー
+created: '2019-05-06T03:28:26Z'
+modified: '2019-09-03T13:07:48Z'
