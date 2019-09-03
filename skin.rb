@@ -6,16 +6,14 @@ module Plugin::MiqHub
     DIR = (Pathname __dir__) / 'skin'
     GITHUB_FAVICON_URL = URI.parse 'https://github.githubassets.com/favicon.ico'
 
-  # module_function
-    extend self
+  module_function
 
-    def photo(name)
+    def [](name)
       # TODO: かわいいアイコンを描く
       name == :github \
-        and return (Plugin.filtering :photo, GITHUB_FAVICON_URL, []).first
+        and return (Plugin.filtering :photo_filter, GITHUB_FAVICON_URL, [])[1].first
       # fallbackのディレクトリを指定
       ::Skin.photo name, [DIR]
     end
-    alias [] photo
   end
 end
