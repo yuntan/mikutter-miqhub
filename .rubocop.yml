@@ -8,7 +8,11 @@ Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
+Metrics/AbcSize:
+  Enabled: false
 Metrics/BlockLength:
+  Enabled: false
+Metrics/ClassLength:
   Enabled: false
 Metrics/LineLength:
   IgnoredPatterns:
