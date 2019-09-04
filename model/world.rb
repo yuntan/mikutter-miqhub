@@ -29,7 +29,7 @@ module Plugin::MiqHub
     alias perma_link url
 
     def to_s
-      "#{NAME} World (#{account.name})"
+      "#{NAME} World (#{me.title})"
     end
   end
 end
