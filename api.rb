@@ -8,6 +8,8 @@ require_relative 'model/repository'
 require_relative 'model/owner'
 
 module Plugin::MiqHub
+  # OAuth tokenを渡してGitHubのAPIを叩くクラス
+  # 関数名に!が付いているのは同期的であることを示す
   class API
     ENDPOINT = URI.parse 'https://api.github.com/graphql'
 

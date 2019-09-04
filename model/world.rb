@@ -3,6 +3,7 @@
 require_relative 'owner'
 
 module Plugin::MiqHub
+  # GitHubを表すWorld
   class World < Diva::Model
     NAME = 'GitHub'
     URL = URI.parse 'https://github.com'

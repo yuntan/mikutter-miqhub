@@ -7,6 +7,7 @@ require 'zlib'
 require_relative 'model_ext'
 
 module Plugin::MiqHub
+  # インストール済みのプラグインの管理とインストール・アンインストールするクラス
   class FileSystem
     include Singleton
 
