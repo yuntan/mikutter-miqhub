@@ -2,8 +2,9 @@
 
 Plugin.create :miqhub do
   filter_miqhub_worlds do
+    # Enumerable#filter requires ruby>=2.6
     [Enumerator.new { |y| Plugin.filtering :worlds, y }
-      .filter { |world| world.class.slug == :miqhub_world }.to_a]
+      .select { |world| world.class.slug == :miqhub_world }.to_a]
   end
 
   # 選択中のworldが:miqhub_worldであればそれを返す
