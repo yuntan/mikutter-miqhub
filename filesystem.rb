@@ -45,7 +45,7 @@ module Plugin::MiqHub
       installed? repo.idname and return
 
       slug = nil
-      Thread.new do
+      Deferred.new do
         path = PLUGIN_DIR
         repo.archive_uri.open do |io|
           tar_xf io, path
@@ -68,7 +68,7 @@ module Plugin::MiqHub
       installed? idname or return
 
       slug = @local_repos.find { |_, repo| repo.idname == idname }.first
-      Thread.new do
+      Deferred.new do
         FileUtils.rm_r PLUGIN_DIR / slug.to_s
       end.next do
         @local_repos[slug] = nil

@@ -97,7 +97,7 @@ module Plugin::MiqHub
   private
 
     def fetch(query)
-      Thread.new { fetch! query }
+      Deferred.new { fetch! query }
     end
 
     def fetch!(query)
