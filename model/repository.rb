@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'owner'
-
 module Plugin::MiqHub
   # GitHubのRepositoryを表すModel
   class Repository < Diva::Model

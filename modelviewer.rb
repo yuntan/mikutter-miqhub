@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'model/owner'
-require_relative 'model/repository'
-
 Plugin.create :miqhub do
   pm = Plugin::MiqHub
 

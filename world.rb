@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'api'
-require_relative 'model/world'
-
 Plugin.create :miqhub do
   pm = Plugin::MiqHub
 

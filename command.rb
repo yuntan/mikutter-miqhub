@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'api'
-require_relative 'filesystem'
-require_relative 'model/repository'
 require_relative 'skin'
 
 Plugin.create :miqhub do

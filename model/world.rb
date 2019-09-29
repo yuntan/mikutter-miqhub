@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'owner'
-
 module Plugin::MiqHub
   # GitHubを表すWorld
   class World < Diva::Model
