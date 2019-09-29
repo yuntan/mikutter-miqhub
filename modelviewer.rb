@@ -4,7 +4,9 @@ require_relative 'model/owner'
 require_relative 'model/repository'
 
 Plugin.create :miqhub do
-  defmodelviewer PM::Repository do |repo|
+  pm = Plugin::MiqHub
+
+  defmodelviewer pm::Repository do |repo|
     [
       [_('名前'), repo.name_with_owner],
       [_('説明'), repo.description],
@@ -16,7 +18,7 @@ Plugin.create :miqhub do
     ]
   end
 
-  deffragment PM::Repository, :readme, _('説明') do |repo|
+  deffragment pm::Repository, :readme, _('説明') do |repo|
     set_icon repo.icon
     label = Gtk::Label.new.tap do |label|
       label.text = repo.description
@@ -26,7 +28,7 @@ Plugin.create :miqhub do
     nativewidget Gtk::VBox.new.closeup label
   end
 
-  defmodelviewer PM::Owner do |owner|
+  defmodelviewer pm::Owner do |owner|
     [
       [(_ '名前'), owner.idname],
       [(_ 'リポジトリ数'), owner.repo_count],

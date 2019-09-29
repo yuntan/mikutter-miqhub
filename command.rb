@@ -6,7 +6,7 @@ require_relative 'model/repository'
 require_relative 'skin'
 
 Plugin.create :miqhub do
-  PM = Plugin::MiqHub
+  pm = Plugin::MiqHub
 
   command(
     :miqhub_list,
@@ -19,7 +19,7 @@ Plugin.create :miqhub do
     (Plugin.filtering :tabs, {}).first.keys.include? :miqhub and next
 
     tab :miqhub, 'GitHub tag:mikutter-plugin' do
-      set_icon PM::Skin[:github]
+      set_icon pm::Skin[:github]
       set_deletable true
       temporary_tab true
       tl = timeline :miqhub do
@@ -28,7 +28,7 @@ Plugin.create :miqhub do
       active!
 
       world, = Plugin.filtering :miqhub_current, nil
-      api = PM::API.new world.token
+      api = pm::API.new world.token
       Deferred.next { tl << +api.fetch_repos }
     end
   end
