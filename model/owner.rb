@@ -19,5 +19,9 @@ module Plugin::MiqHub
 
     # for user model
     alias profile_image_url avatar_url
+
+    def to_s
+      "MiqHub::Owner(#{idname})"
+    end
   end
 end

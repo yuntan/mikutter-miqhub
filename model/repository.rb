@@ -52,7 +52,7 @@ module Plugin::MiqHub
     end
 
     def to_s
-      "MiqHub Repository #{name}"
+      "MiqHub::Repository(#{name_with_owner})"
     end
   end
 end
