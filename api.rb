@@ -10,15 +10,39 @@ module Plugin::MiqHub
   class API
     ENDPOINT = URI.parse 'https://api.github.com/graphql'
 
+    OWNER = <<~GRAPHQL
+      login
+      url
+      avatarUrl
+      repositories {
+        totalCount
+      }
+    GRAPHQL
+
+    REPO = <<~GRAPHQL
+      name
+      nameWithOwner
+      owner {
+        #{OWNER}
+      }
+      description
+      stargazers {
+        totalCount
+      }
+      viewerHasStarred
+      forkCount
+      createdAt
+      updatedAt
+      url
+      defaultBranchRef {
+        name
+      }
+    GRAPHQL
+
     QUERY_ME = <<~GRAPHQL
       query {
         viewer {
-          login
-          url
-          avatarUrl
-          repositories {
-            totalCount
-          }
+          #{OWNER}
         }
       }
     GRAPHQL
@@ -28,30 +52,25 @@ module Plugin::MiqHub
         search(query: "topic:mikutter-plugin", type: REPOSITORY, first: 100) {
           nodes {
             ... on Repository {
-              name
-              nameWithOwner
-              owner {
-                login
-                url
-                avatarUrl
-                repositories {
-                  totalCount
-                }
-              }
-              description
-              stargazers {
-                totalCount
-              }
-              viewerHasStarred
-              forkCount
-              createdAt
-              updatedAt
-              url
-              defaultBranchRef {
-                name
-              }
+              #{REPO}
             }
           }
+        }
+      }
+    GRAPHQL
+
+    QUERY_REPO = <<~GRAPHQL
+      query($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
+          #{REPO}
+        }
+      }
+    GRAPHQL
+
+    QUERY_OWNER = <<~GRAPHQL
+      query($name: String!) {
+        repositoryOwner(login: $name) {
+          #{OWNER}
         }
       }
     GRAPHQL
@@ -78,6 +97,22 @@ module Plugin::MiqHub
         it = +(fetch QUERY_REPOS)
         it['errors'] and return Deferred.fail it['errors'].first['message']
         it['data']['search']['nodes'].map(&PM.method(:parse_repo))
+      end
+    end
+
+    def fetch_repo(owner, name)
+      Deferred.next do
+        it = +(fetch QUERY_REPO, owner: owner, name: name)
+        it['errors'] and return Deferred.fail it['errors'].first['message']
+        PM.parse_repo it['data']['repository']
+      end
+    end
+
+    def fetch_owner(name)
+      Deferred.next do
+        it = +(fetch QUERY_OWNER, name: name)
+        it['errors'] and return Deferred.fail it['errors'].first['message']
+        PM.parse_owner it['data']['repositoryOwner']
       end
     end
 
