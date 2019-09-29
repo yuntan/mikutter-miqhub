@@ -73,14 +73,14 @@ Plugin.create :miqhub do
           role: :timeline \
   do |opt|
     name = opt.messages.first.title
-    activity :miqhub, (format _ '%sをインストール中…', name)
+    activity :miqhub, (format (_ '%sをインストール中…'), name)
 
     Deferred.next do
       +(pm::FileSystem.install! opt.messages.first)
-      activity :miqhub, (format _ '%sをインストールしました', name)
+      activity :miqhub, (format (_ '%sをインストールしました'), name)
     end.trap do |e|
       error e.full_message
-      msg = format _ '%sをインストール出来ませんでした', name
+      msg = format (_ '%sをインストール出来ませんでした'), name
       activity :miqhub, ([msg, e.message].join "\n")
     end
   end
@@ -105,10 +105,10 @@ Plugin.create :miqhub do
 
     Deferred.next do
       +(pm::FileSystem.uninstall! opt.messages.first.idname)
-      activity :miqhub, (format _ '%sをアンインストールしました', name)
+      activity :miqhub, (format (_ '%sをアンインストールしました'), name)
     end.trap do |e|
       error e.full_message
-      msg = format _ '%sをアンインストール出来ませんでした', name
+      msg = format (_ '%sをアンインストール出来ませんでした'), name
       activity :miqhub, ([msg, e.message].join "\n")
     end
   end
