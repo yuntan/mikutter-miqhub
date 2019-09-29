@@ -3,10 +3,19 @@
 module Plugin::MiqHub
   # GitHubのRepositoryを表すModel
   class Repository < Diva::Model
+    RE_URL = %r{^https://github.com/(?<owner>[^/]+)/(?<name>[^/]+)$}.freeze
+
     include Diva::Model::MessageMixin
     include Diva::Model::UserMixin
 
     register :miqhub_repository, name: 'GitHub Repository', timeline: true
+
+    handle RE_URL do |uri|
+      world, = Plugin.filtering :miqhub_current, nil
+      world or return
+      m = RE_URL.match uri.to_s
+      (API.new world.token).fetch_repo m[:owner], m[:name]
+    end
 
     field.string :name, required: true
     field.string :name_with_owner, required: true
