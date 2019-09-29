@@ -29,7 +29,14 @@ Plugin.create :miqhub do
 
       world, = Plugin.filtering :miqhub_current, nil
       api = pm::API.new world.token
-      Deferred.next { tl << +api.fetch_repos }
+
+      Deferred.next do
+        tl << +api.fetch_repos
+      end.trap do |e|
+        error e.full_message
+        msg = _ 'プラグイン一覧を取得出来ませんでした'
+        activity :miqhub, ([msg, e.message].join "\n")
+      end
     end
   end
 
@@ -65,10 +72,16 @@ Plugin.create :miqhub do
           icon: pm::Skin[:install],
           role: :timeline \
   do |opt|
+    name = opt.messages.first.title
+    activity :miqhub, (format _ '%sをインストール中…', name)
+
     Deferred.next do
       +(pm::FileSystem.install! opt.messages.first)
+      activity :miqhub, (format _ '%sをインストールしました', name)
     end.trap do |e|
       error e.full_message
+      msg = format _ '%sをインストール出来ませんでした', name
+      activity :miqhub, ([msg, e.message].join "\n")
     end
   end
 
@@ -88,10 +101,15 @@ Plugin.create :miqhub do
           icon: pm::Skin[:uninstall],
           role: :timeline \
   do |opt|
+    name = opt.messages.first.title
+
     Deferred.next do
       +(pm::FileSystem.uninstall! opt.messages.first.idname)
+      activity :miqhub, (format _ '%sをアンインストールしました', name)
     end.trap do |e|
       error e.full_message
+      msg = format _ '%sをアンインストール出来ませんでした', name
+      activity :miqhub, ([msg, e.message].join "\n")
     end
   end
 end
