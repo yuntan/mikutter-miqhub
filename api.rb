@@ -76,7 +76,7 @@ module Plugin::MiqHub
     def fetch_repos
       Deferred.next do
         it = +(fetch QUERY_REPOS)
-        it['data']['search']['nodes'].map do |it|
+        it['errors'] and return Deferred.fail it['errors'].first['message']
         it['data']['search']['nodes'].map(&PM.method(:parse_repo))
       end
     end
