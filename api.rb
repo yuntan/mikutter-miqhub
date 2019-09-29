@@ -96,17 +96,17 @@ module Plugin::MiqHub
 
   private
 
-    def fetch(query)
-      Deferred.new { fetch! query }
+    def fetch(query, **data)
+      Deferred.new { fetch! query, data }
     end
 
-    def fetch!(query)
+    def fetch!(query, **data)
       body = nil
       (Net::HTTP.new ENDPOINT.host, ENDPOINT.port).tap do |http|
         http.use_ssl = true
       end.start do |http|
         req = Net::HTTP::Post.new ENDPOINT.path, header
-        req.body = { query: query }.to_json
+        req.body = { query: query, variables: data }.to_json
         http.request req do |res|
           res.code == '200' or next Deferred.fail res.message
           body = res.body
