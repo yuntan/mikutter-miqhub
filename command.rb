@@ -65,7 +65,11 @@ Plugin.create :miqhub do
           icon: pm::Skin[:install],
           role: :timeline \
   do |opt|
-    PM::FileSystem.install! opt.messages.first
+    Deferred.next do
+      +(pm::FileSystem.install! opt.messages.first)
+    end.trap do |e|
+      error e.full_message
+    end
   end
 
   command :miqhub_uninstall,
@@ -84,6 +88,10 @@ Plugin.create :miqhub do
           icon: pm::Skin[:uninstall],
           role: :timeline \
   do |opt|
-    PM::FileSystem.uninstall! opt.messages.first.idname
+    Deferred.next do
+      +(pm::FileSystem.uninstall! opt.messages.first.idname)
+    end.trap do |e|
+      error e.full_message
+    end
   end
 end
