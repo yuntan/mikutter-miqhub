@@ -47,7 +47,9 @@ module Plugin::MiqHub
       slug = nil
       Thread.new do
         path = PLUGIN_DIR
-        tar_xf repo.archive_uri.open, path
+        repo.archive_uri.open do |io|
+          tar_xf io, path
+        end
         path /= "#{repo.name}-#{repo.default_branch_name}"
         yaml = load_yaml File.new path / '.mikutter.yml'
         slug = yaml[:slug]
@@ -77,15 +79,18 @@ module Plugin::MiqHub
 
   private
 
-    def tar_xf(file, path)
-      tar = Gem::Package::TarReader.new Zlib::GzipReader.open file
-      tar.rewind
-      tar.each do |entry|
-        entry.directory? and Dir.mkdir path / entry.full_name
-        entry.file? and IO.copy_stream entry, path / entry.full_name
-        entry.close
+    def tar_xf(io, path)
+      Zlib::GzipReader.wrap io do |gz|
+        (Gem::Package::TarReader.new gz).tap do |tar|
+          tar.rewind
+          tar.each do |entry|
+            entry.directory? and Dir.mkdir path / entry.full_name
+            entry.file? and IO.copy_stream entry, path / entry.full_name
+            entry.close
+          end
+        end.close
+        gz.finish
       end
-      tar.close
     end
 
     def load_yaml(io)
