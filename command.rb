@@ -72,17 +72,7 @@ Plugin.create :miqhub do
           icon: pm::Skin[:install],
           role: :timeline \
   do |opt|
-    name = opt.messages.first.title
-    activity :miqhub, (format (_ '%sをインストール中…'), name)
-
-    Deferred.next do
-      +(pm::FileSystem.install! opt.messages.first)
-      activity :miqhub, (format (_ '%sをインストールしました'), name)
-    end.trap do |e|
-      error e.full_message
-      msg = format (_ '%sをインストール出来ませんでした'), name
-      activity :miqhub, ([msg, e.message].join "\n")
-    end
+    Plugin.call :miqhub_install, opt.messages.first
   end
 
   command :miqhub_uninstall,
@@ -109,6 +99,22 @@ Plugin.create :miqhub do
     end.trap do |e|
       error e.full_message
       msg = format (_ '%sをアンインストール出来ませんでした'), name
+      activity :miqhub, ([msg, e.message].join "\n")
+    end
+  end
+
+
+  # intent.rbから呼び出せるようにしておく
+  on_miqhub_install do |repo|
+    name = repo.title
+    activity :miqhub, (format (_ '%sをインストール中…'), name)
+
+    Deferred.next do
+      +(pm::FileSystem.install! opt.messages.first)
+      activity :miqhub, (format (_ '%sをインストールしました'), name)
+    end.trap do |e|
+      error e.full_message
+      msg = format (_ '%sをインストール出来ませんでした'), name
       activity :miqhub, ([msg, e.message].join "\n")
     end
   end
