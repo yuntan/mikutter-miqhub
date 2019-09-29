@@ -77,20 +77,7 @@ module Plugin::MiqHub
       Deferred.next do
         it = +(fetch QUERY_REPOS)
         it['data']['search']['nodes'].map do |it|
-          Repository.new(
-            name: it['name'],
-            name_with_owner: it['nameWithOwner'],
-            owner: (parse_owner it['owner']),
-            description: it['description'] || '',
-            star_count: it['stargazers']['totalCount'],
-            starred?: it['viewerHasStarred'],
-            fork_count: it['forkCount'],
-            created: it['createdAt'],
-            modified: it['updatedAt'],
-            url: it['url'],
-            default_branch_name: it['defaultBranchRef']['name'],
-          )
-        end
+        it['data']['search']['nodes'].map(&PM.method(:parse_repo))
       end
     end
 
@@ -116,13 +103,32 @@ module Plugin::MiqHub
       JSON.parse body
     end
 
-    def parse_owner(owner)
-      Owner.new(
-        idname: owner['login'],
-        url: owner['url'],
-        avatar_url: owner['avatarUrl'],
-        repo_count: owner['repositories']['totalCount'],
-      )
-    end
+  end
+
+module_function
+
+  def parse_repo(it)
+    Repository.new(
+      name: it['name'],
+      name_with_owner: it['nameWithOwner'],
+      owner: (parse_owner it['owner']),
+      description: it['description'] || '',
+      star_count: it['stargazers']['totalCount'],
+      starred?: it['viewerHasStarred'],
+      fork_count: it['forkCount'],
+      created: it['createdAt'],
+      modified: it['updatedAt'],
+      url: it['url'],
+      default_branch_name: it['defaultBranchRef']['name'],
+    )
+  end
+
+  def parse_owner(it)
+    Owner.new(
+      idname: it['login'],
+      url: it['url'],
+      avatar_url: it['avatarUrl'],
+      repo_count: it['repositories']['totalCount'],
+    )
   end
 end
