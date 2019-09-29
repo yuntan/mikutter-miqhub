@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'skin'
-
 Plugin.create :miqhub do
   pm = Plugin::MiqHub
 
