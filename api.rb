@@ -137,7 +137,6 @@ module Plugin::MiqHub
 
       JSON.parse body
     end
-
   end
 
 module_function

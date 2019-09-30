@@ -98,7 +98,6 @@ Plugin.create :miqhub do
     end
   end
 
-
   # intent.rbから呼び出せるようにしておく
   on_miqhub_install do |repo|
     name = repo.title

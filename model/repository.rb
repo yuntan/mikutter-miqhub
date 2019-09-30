@@ -51,7 +51,8 @@ module Plugin::MiqHub
     end
 
     # for message model
-    def favorite?(counterpart=nil)
+    def favorite?(_=nil)
+      # TODO: arg counterpart
       # TODO: world, userを検証する
       starred?
     end
