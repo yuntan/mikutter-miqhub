@@ -104,7 +104,7 @@ Plugin.create :miqhub do
     activity :miqhub, (format (_ '%sをインストール中…'), name)
 
     Deferred.next do
-      +(pm::FileSystem.install! opt.messages.first)
+      +(pm::FileSystem.install! repo)
       activity :miqhub, (format (_ '%sをインストールしました'), name)
     end.trap do |e|
       error e.full_message
