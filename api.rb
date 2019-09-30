@@ -4,6 +4,7 @@ require 'json'
 require 'uri'
 require 'net/http'
 
+#:nodoc:
 module Plugin::MiqHub
   # OAuth tokenを渡してGitHubのAPIを叩くクラス
   # 関数名に!が付いているのは同期的であることを示す
