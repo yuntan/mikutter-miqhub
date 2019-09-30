@@ -8,6 +8,8 @@ Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
+Lint/Void:
+  Enabled: false # for Deferrable.+@
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
@@ -21,6 +23,8 @@ Metrics/LineLength:
   - '%r'
 Metrics/MethodLength:
   Enabled: false
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: [io, id, to, by, on, in, at, ip, db, it] # add 'it'
 Style/AndOr:
   EnforcedStyle: conditionals
 Style/AsciiComments:
@@ -28,7 +32,7 @@ Style/AsciiComments:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 Style/FormatStringToken:
-  EnforcedStyle: template
+  Enabled: false
 Style/MethodCallWithArgsParentheses:
   Enabled: true
   EnforcedStyle: omit_parentheses
@@ -41,6 +45,8 @@ Style/NestedParenthesizedCalls:
   Enabled: false
 Style/Not:
   Enabled: false
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 Style/TrailingCommaInArrayLiteral:
