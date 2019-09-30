@@ -39,9 +39,8 @@ Plugin.create :miqhub do
   end
 
   command :miqhub_about_owner,
-          name: proc {
-            format (_ '%{title}について'),
-                   title: (opt and opt.messages.first.owner.title or '…')
+          name: proc { |opt|
+            format (_ '%sについて'), opt.messages.first.owner.title
           },
           condition: proc { |opt|
             (opt.messages.size == 1) \
@@ -56,8 +55,7 @@ Plugin.create :miqhub do
 
   command :miqhub_install,
           name: proc { |opt|
-            format (_ '%{title}をインストール'),
-                   title: (opt and opt.messages.first.title or '…')
+            format (_ '%sをインストール'), opt.messages.first.title
           },
           condition: proc { |opt|
             m = opt.messages.first
@@ -75,8 +73,7 @@ Plugin.create :miqhub do
 
   command :miqhub_uninstall,
           name: proc { |opt|
-            format (_ '%{title}をアンインストール'),
-                   title: (opt and opt.messages.first.title or '…')
+            format (_ '%sをアンインストール'), opt.messages.first.title
           },
           condition: proc { |opt|
             m = opt.messages.first
